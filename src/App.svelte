@@ -138,8 +138,60 @@
         currentCollection = arrOfElement.shift()
     })
 
+    const checkIsRight = () => {
+        let rightCount = 0
+
+        currentCollection.forEach((block, index) => {
+            const textContent = block.children[0].textContent;
+            if (textContent === randomedWord[index]) {
+                console.log(index, "is right")
+                block.style = "background: green!important"
+                rightCount++
+            }
+
+            if (textContent !== randomedWord[index] && randomedWord.includes(textContent)) {
+                console.log(index, 'right but wrong position')
+                block.style = "background: yellow!important"
+            }
+        })
+
+        if (rightCount === 6) {
+            isWin = true
+            isEnd = true
+            document.removeEventListener('keyup', logic)
+        }
+
+        if (arrOfElement.length === 0) {
+            isWin = false
+            isEnd = true
+            document.removeEventListener('keyup', logic)
+            return
+        }
+
+        currentCollection = arrOfElement.shift()
+    }
+
+    const isPreventable = (evt) => {
+        if (evt.which >= 112 && evt.which <= 123) {
+            console.log(`Was clicked function key which ${evt.key}`)
+            console.log("What are you looking for? 👀")
+            return true
+        }
+
+        if (evt.code.startsWith("Digit") || evt.key === "Alt" || evt.key === "Shift" ||
+            evt.key === "Escape" || evt.key === "Tab" ||
+            evt.key === "Control" || evt.code === "Space"
+        ) {
+            return true
+        }
+
+        return false
+    }
+
     const logic = (evt) => {
-        console.log(evt)
+        if (isPreventable(evt)) {
+            return
+        }
 
         if (evt.key === "Enter") {
             const length = currentCollection.reduce((currentAcc, block) => {
@@ -147,51 +199,8 @@
             }, 0)
 
             if (length === 6) {
-                let rightCount = 0
-                currentCollection.forEach((block, index) => {
-                    const textContent = block.children[0].textContent;
-                    if (textContent === randomedWord[index]) {
-                        console.log(index, "is right")
-                        block.style = "background: green!important"
-                        rightCount++
-                    }
-
-                    if (textContent !== randomedWord[index] && randomedWord.includes(textContent)) {
-                        console.log(index, 'right but wrong position')
-                        block.style = "background: yellow!important"
-                    }
-                })
-
-                if (rightCount === length) {
-                    isWin = true
-                    isEnd = true
-                    document.removeEventListener('keyup', logic)
-                }
-
-                if (arrOfElement.length === 0) {
-                    isWin = false
-                    isEnd = true
-                    document.removeEventListener('keyup', logic)
-                    return
-                }
-
-                rightCount = 0
-                currentCollection = arrOfElement.shift()
+                checkIsRight()
             }
-            return
-        }
-
-        if (evt.code.startsWith("Digit")) {
-            return
-        }
-
-        if (evt.which >= 112 && evt.which <= 123) {
-            evt.preventDefault()
-            console.log(`Was clicked function key which ${evt.key}`)
-            return
-        }
-
-        if (evt.key === "Alt" || evt.key === "Escape" || evt.key === "Shift" || evt.key === "Tab" || evt.key === "Control") {
             return
         }
 
@@ -212,9 +221,6 @@
                 return
             }
         }
-
-        console.log(element)
-        console.log(arrOfElement)
     }
 
     document.addEventListener("keyup", logic)
@@ -224,7 +230,7 @@
     <img src={logo} alt="Svelte Logo"/>
     <h1>Hello wordle!</h1>
     {#if isEnd}
-        <h3 style="color: #f1f1f4">You {isWin ? "Win! 😎" : "Lose 😥"}</h3>
+        <h3 style="color: #f1f1f4; margin-bottom: 15px">You {isWin ? "Win! 😎" : `Lose 😥! Word was ${randomedWord}`}</h3>
     {/if}
     <!--<p>randomed word: <span style="color: aqua">{randomedWord}</span></p>-->
 
