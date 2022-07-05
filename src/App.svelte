@@ -230,7 +230,9 @@
     <img src={logo} alt="Svelte Logo"/>
     <h1>Hello wordle!</h1>
     {#if isEnd}
-        <h3 style="color: #f1f1f4; margin-bottom: 15px">You {isWin ? "Win! 😎" : `Lose 😥! Word was ${randomedWord}`}</h3>
+        <h3 style="color: #f1f1f4; margin-bottom: 30px">
+            You {@html isWin ? "Win! 😎" : `Lose 😥! Word was <span style="color: #2f9fb4">${randomedWord}</span>`}
+        </h3>
     {/if}
     <!--<p>randomed word: <span style="color: aqua">{randomedWord}</span></p>-->
 
