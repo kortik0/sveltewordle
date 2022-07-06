@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/800a58a3-f701-431f-8c78-aced421e2d32/deploy-status)](https://app.netlify.com/sites/sparkling-concha-f0dc21/deploys)
 # Svelte + Vite
 
 This template should help get you started developing with Svelte in Vite.
